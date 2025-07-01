@@ -1,1 +1,18 @@
+name: First workflow
 
+on: push
+
+jobs:
+  echo-ubuntu-runner:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout code
+       uses: actions/checkout@v4.2.2
+     - name: Setup Python
+       uses: actions/setup-python@v5.6.0
+       with:
+         python-version: '3.13'
+     - name: Check Python Installed
+       run: echo python --version
+         
+     
