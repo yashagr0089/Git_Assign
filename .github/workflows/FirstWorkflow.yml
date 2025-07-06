@@ -6,14 +6,17 @@ jobs:
   greet_job:
     runs-on: self-hosted
     name: Say Hello with Custom Docker Action
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run my docker action
-        uses: ./my-docker-action
-        id: greet_step
-        with:
-          person-name: "Yash"
-      - name: Show greeting output
-        run: echo "Message from action:${{ steps.greet_step.outputs.greeting }}"
+      - name: Build Docker image without cache
+        run: docker build --no-cache -t my-action ./my-docker-action
+
+      - name: Run Docker container with inputs
+        run: |
+          docker run --rm \
+            -e INPUT_PERSON-NAME="Yash" \
+            -v ${{ github.workspace }}:/github/workspace \
+            my-action
