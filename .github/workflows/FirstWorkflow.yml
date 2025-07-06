@@ -1,23 +1,91 @@
-name: Custom Docker Action Example
+name: Event Trigger Practice
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
+    inputs:
+      user:
+        description: 'Enter your name'
+        required: true
 
 jobs:
   greet_job:
     runs-on: self-hosted
-    name: Say Hello with Custom Docker Action
-
+    name: Greet User
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build Docker image without cache
-        run: docker build --no-cache -t my-action ./my-docker-action
+      - name: Run greeting docker action
+        uses: ./my-docker-action
+        id: greet
+        with:
+          person-name: ${{ github.event.inputs.user || 'AutoUser' }}
 
-      - name: Run Docker container with inputs
+      - name: Print output
+        run: echo "Greeting message: ${{ steps.greet.outputs.greeting }}"
+
+  node_test_job:
+    name: Matrix Node.js Test
+    needs: greet_job
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [14, 16]
+    steps:
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Print context info
         run: |
-          docker run --rm \
-            -e INPUT_PERSON_NAME="Yash" \
-            -e GITHUB_OUTPUT="${GITHUB_OUTPUT}" \
-            -v ${{ github.workspace }}:/github/workspace \
-            my-action
+          echo "Triggered by: ${{ github.event_name }}"
+          echo "Hello ${{ github.event.inputs.user || 'AutoUser' }}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# name: Custom Docker Action Example
+
+# on: push
+
+# jobs:
+#   greet_job:
+#     runs-on: self-hosted
+#     name: Say Hello with Custom Docker Action
+
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v4
+
+#       - name: Build Docker image without cache
+#         run: docker build --no-cache -t my-action ./my-docker-action
+
+#       - name: Run Docker container with inputs
+#         run: |
+#           docker run --rm \
+#             -e INPUT_PERSON_NAME="Yash" \
+#             -e GITHUB_OUTPUT="${GITHUB_OUTPUT}" \
+#             -v ${{ github.workspace }}:/github/workspace \
+#             my-action
