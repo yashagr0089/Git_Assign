@@ -15,6 +15,5 @@ jobs:
         id: greet_step
         with:
           person-name: "Yash"
-
       - name: Show greeting output
         run: echo "Message from action:${{ steps.greet_step.outputs.greeting }}"
