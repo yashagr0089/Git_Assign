@@ -17,6 +17,7 @@ jobs:
       - name: Run Docker container with inputs
         run: |
           docker run --rm \
-            -e INPUT_PERSON-NAME="Yash" \
+            -e INPUT_PERSON_NAME="Yash" \
+            -e GITHUB_OUTPUT="${GITHUB_OUTPUT}" \
             -v ${{ github.workspace }}:/github/workspace \
             my-action
