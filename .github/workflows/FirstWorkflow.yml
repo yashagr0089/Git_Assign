@@ -1,18 +1,20 @@
-name: First workflow
+name: Custom Docker Action Example
 
 on: push
 
 jobs:
-  echo-ubuntu-runner:
-    runs-on: ubuntu-latest
+  greet_job:
+    runs-on: self-hosted
+    name: Say Hello with Custom Docker Action
     steps:
-     - name: Checkout code
-       uses: actions/checkout@v4.2.2
-     - name: Setup Python
-       uses: actions/setup-python@v5.6.0
-       with:
-         python-version: '3.13'
-     - name: Check Python Installed
-       run: echo python --version
-         
-     
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run my docker action
+        uses: ./my-docker-action
+        id: greet_step
+        with:
+          person-name: "Yash"
+
+      - name: Show greeting output
+        run: echo "Message from action:${{ steps.greet_step.outputs.greeting }}"
