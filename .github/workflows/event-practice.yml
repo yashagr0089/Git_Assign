@@ -32,17 +32,17 @@ jobs:
   node_test_job:
     name: Matrix Node.js Test
     needs: greet_job
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
-        node: [16, 18]
+        node-version: [14, 16]
     steps:
-      - name: Use Node.js ${{ matrix.node }}
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
+          node-version: ${{ matrix.node-version }}
 
-      - name: Log from matrix job
+      - name: Print context info
         run: |
-          echo "This is Node version ${{ matrix.node }}"
-          echo "Workflow triggered by: ${{ github.event_name }}"
+          echo "Triggered by: ${{ github.event_name }}"
+          echo "Hello ${{ github.event.inputs.user || 'AutoUser' }}"
