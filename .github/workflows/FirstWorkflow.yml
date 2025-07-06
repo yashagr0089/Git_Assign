@@ -35,23 +35,17 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        node-version: [14, 16]
+        node: [14, 16]
     steps:
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node }}
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ matrix.node }}
 
       - name: Print context info
         run: |
           echo "Triggered by: ${{ github.event_name }}"
           echo "Hello ${{ github.event.inputs.user || 'AutoUser' }}"
-
-
-
-
-
-
 
 
 
