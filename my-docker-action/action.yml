@@ -1,0 +1,13 @@
+name: "Greet User"
+description: "A simple Docker action that greets a user"
+inputs:
+  person-name:
+    description: "Name of the person to greet"
+    required: true
+    default: "Friend"
+outputs:
+  greeting:
+    description: "The greeting message"
+runs:
+  using: "docker"
+  image: "Dockerfile"
